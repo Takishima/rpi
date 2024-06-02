@@ -1,0 +1,21 @@
+keys:
+  # Users
+  - users:
+      - &damien age1km0tqddwtufyufh7pvfegjjjkjkmwq7jva5ullxq229ky4m5w4ms7g5ney
+  # Hosts
+  # Generate key using `nix-shell -p ssh-to-age --run 'cat ssh_host_ed25519_key.pub | ssh-to-age'`
+  - hosts:
+      - &pi3d age18cc7aumk6jvwmm8qptwlz9thqjuxlwe7ce47veqzwdaw9s6kugfsessq88
+      - &generic-linux age1xmy79nv7qtmyy2a5pz9tt9uvsz5hlakhny2p7ae0mtclxv4chfxqde5pgd
+
+creation_rules:
+  - path_regex: nix/nixos/pi3d/secrets\.ya?ml$
+    key_groups:
+      - age:
+          - *damien
+          - *pi3d
+  - path_regex: nix/nixos/generic-linux/secrets\.ya?ml$
+    key_groups:
+      - age:
+          - *damien
+          - *generic-linux
