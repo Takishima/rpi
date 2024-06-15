@@ -1,0 +1,107 @@
+{
+	"firewall":{
+		"group":{
+			"address-group":{
+				"IPTV-Multicast":{
+					"description":"Multicast address",
+					"address":[
+						"224.0.0.0/4",
+						"239.0.0.0/8"
+					]
+				},
+				"SCTV-MC-SOURCE":{
+					"description":"Swisscom Multicast Source",
+					"address":[
+						"213.3.0.0/17"
+					]
+				}
+			}
+		},
+		"name":{
+			"WAN_IN":{
+				"rule":{
+					"10":{
+						"action":"accept",
+						"description":"Allow IPTV Multicast UDP",
+						"log":"disable",
+						"protocol":"udp",
+						"state":{
+							"new":"enable"
+						},
+						"destination":{
+							"group":{
+								"address-group":"IPTV-Multicast"
+							}
+						},
+						"source":{
+							"group":{
+								"address-group":"SCTV-MC-SOURCE"
+							}
+						}
+					},
+					"20":{
+						"action":"accept",
+						"description":"Allow IGMP",
+						"log":"disable",
+						"protocol":"igmp"
+					}
+				}
+			},
+			"WAN_LOCAL":{
+				"rule":{
+					"10":{
+						"action":"accept",
+						"description":"Allow IGMP",
+						"log":"disable",
+						"protocol":"igmp"
+					}
+				}
+			}
+		}
+	},
+	"protocols":{
+		"igmp-proxy":{
+			"interface":{
+				"eth0":{
+					"alt-subnet":[
+						"224.0.0.0/4",
+						"213.3.0.0/17"
+					],
+					"role":"upstream",
+					"threshold":"1",
+					"whitelist":[
+						"239.0.0.0/8"
+					]
+				},
+				"eth1":{
+					"role":"disabled"
+				},
+				"eth1.10":{
+					"alt-subnet":[
+						"192.168.1.0/24"
+					],
+					"role":"downstream",
+					"threshold":"1"
+				},
+				"eth2":{
+					"role":"disabled"
+				}
+			}
+		}
+	},
+	"interfaces":{
+		"ethernet":{
+			"eth0":{
+				"dhcp-options":{
+					"client-option":[
+						"retry 60;",
+						"send vendor-class-identifier &quot;100008,0001&quot;;"
+					],
+					"default-route":"update",
+					"default-route-distance":"210",
+					"name-server":"update"
+				}
+			}
+		}
+	}
+}
