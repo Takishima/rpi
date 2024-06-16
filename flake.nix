@@ -51,6 +51,7 @@
         allowUnfree = true;
       };
       withOverlays = [
+        inputs.self.overlays.octoprint
         (final: prev: {
           unstable = import inputs.nixpkgs-unstable {
             inherit (prev) system;
